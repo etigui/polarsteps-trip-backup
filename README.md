@@ -32,7 +32,7 @@ For example:
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 ```
 
-[!WARNING]\
+> [!WARNING]\
 > Your remember_token is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
 
 ## Quick start
