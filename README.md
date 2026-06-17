@@ -32,7 +32,7 @@ For example:
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 ```
 
-[!IMPORTANT]\
+[!WARNING]\
 > Your remember_token is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
 
 ## Quick start
@@ -46,6 +46,30 @@ ps_backup = PolarstepsBackup(
 )
 ps_backup.backup_trip()
 ```
+> [!WARNING]\
+> This project is **not affiliated with, endorsed by, or officially supported by Polarsteps**.
+> 
+> #### Terms of Use
+> * **Personal backups only**: This tool is meant to help you back up your own Polarsteps trip data.
+> * **Authentication required**: You must provide your own valid Polarsteps authentication cookie.
+> * **Legitimate access only**: You should only use this tool with trips and data that belong to you, or that you are explicitly allowed to access.
+> * **User responsibility**: You are responsible for ensuring that your use of this tool complies with Polarsteps' Terms of Service.
+> * **No warranty**: This software is provided as-is, without any warranty or guarantee of availability, correctness, or continued functionality.
+> 
+> #### Risks and Limitations
+> * Polarsteps may change, restrict, or remove their internal API endpoints at any time, which may break this tool without notice.
+> * Because the API is undocumented, some data may be incomplete, unavailable, or returned in a different format.
+> * Using unofficial API endpoints may violate Polarsteps' Terms of Service.
+> * Excessive or automated usage may lead to rate limiting, blocking, account restrictions, or account suspension.
+> * Authentication cookies are sensitive credentials and should never be shared, committed, or exposed publicly.
+> 
+> #### Responsible Use
+> * Do not use this tool for commercial purposes.
+> * Do not use it to access, scrape, or archive data that does not belong to you.
+> * Do not run high-volume downloads or aggressive automated requests.
+> * Respect Polarsteps' infrastructure and use reasonable delays between requests.
+> 
+> **By using this software, you acknowledge these limitations and agree to use it responsibly.**
 
 ## Credits
 This project relies on [remuzel/polarsteps-api](https://github.com/remuzel/polarsteps-api/), an unofficial Python wrapper around the Polarsteps APIs.
@@ -54,27 +78,4 @@ The API client and the approach used to retrieve Polarsteps trip data are based 
 
 This project is not affiliated with, endorsed by, or connected to Polarsteps.
 
-> [!WARNING]\
-> This project is **not affiliated with, endorsed by, or officially supported by Polarsteps**.
-> 
-> ### Terms of Use
-> * **Personal backups only**: This tool is meant to help you back up your own Polarsteps trip data.
-> * **Authentication required**: You must provide your own valid Polarsteps authentication cookie.
-> * **Legitimate access only**: You should only use this tool with trips and data that belong to you, or that you are explicitly allowed to access.
-> * **User responsibility**: You are responsible for ensuring that your use of this tool complies with Polarsteps' Terms of Service.
-> * **No warranty**: This software is provided as-is, without any warranty or guarantee of availability, correctness, or continued functionality.
-> 
-> ### Risks and Limitations
-> * Polarsteps may change, restrict, or remove their internal API endpoints at any time, which may break this tool without notice.
-> * Because the API is undocumented, some data may be incomplete, unavailable, or returned in a different format.
-> * Using unofficial API endpoints may violate Polarsteps' Terms of Service.
-> * Excessive or automated usage may lead to rate limiting, blocking, account restrictions, or account suspension.
-> * Authentication cookies are sensitive credentials and should never be shared, committed, or exposed publicly.
-> 
-> ### Responsible Use
-> * Do not use this tool for commercial purposes.
-> * Do not use it to access, scrape, or archive data that does not belong to you.
-> * Do not run high-volume downloads or aggressive automated requests.
-> * Respect Polarsteps' infrastructure and use reasonable delays between requests.
-> 
-> **By using this software, you acknowledge these limitations and agree to use it responsibly.**
+
