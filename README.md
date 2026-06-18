@@ -4,6 +4,7 @@ Polarsteps backup command-line application
 ## Run
 ### Locally
 ```bash
+export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
 uv sync --dev && uv pip install -e .
 uv run main.py
 ```
