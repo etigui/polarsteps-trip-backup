@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 import argparse
@@ -19,6 +20,8 @@ def init_logger() -> None:
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for the Polarsteps backup script."""
+    load_dotenv()
+
     parser = argparse.ArgumentParser(
         description="Backup a Polarsteps trip",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -28,6 +31,15 @@ def parse_args() -> argparse.Namespace:
         type=int,
         required=True,
         help="Polarsteps trip ID to backup",
+    )
+    parser.add_argument(
+        "--remember-token",
+        default=os.getenv("POLARSTEPS_REMEMBER_TOKEN"),
+        metavar="TOKEN",
+        help=(
+            "Polarsteps remember token. "
+            "Defaults to the POLARSTEPS_REMEMBER_TOKEN environment variable."
+        ),
     )
     parser.add_argument(
         "--backup-root",
@@ -47,11 +59,18 @@ def parse_args() -> argparse.Namespace:
         dest="media_download_delay",
         help="Disable the random delay (1.5 - 5 sec) between media image downloads.",
     )
-    return parser.parse_args()
+
+    args = parser.parse_args()
+
+    if not args.remember_token:
+        parser.error(
+            "A remember token is required. Provide --remember-token or set "
+            "POLARSTEPS_REMEMBER_TOKEN in your environment or .env file."
+        )
+    return args
 
 def main() -> None:
     """Run the Polarsteps backup command-line application."""
-    load_dotenv()
     init_logger()
 
     args = parse_args()
@@ -59,6 +78,7 @@ def main() -> None:
     ps_backup = PolarstepsBackup(
         trip_id =  args.trip_id,
         backup_root = args.backup_root,
+        remember_token = args.remember_token,
         backup_images = args.backup_images,
         media_download_delay=args.media_download_delay,
     )
