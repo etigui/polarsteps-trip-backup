@@ -43,7 +43,7 @@ For example:
 ```bash
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 ```
-> [!WARNING]\
+> [!CAUTION]
 > Your remember_token is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
 
 ## Trip ID
@@ -103,7 +103,7 @@ ps_backup = PolarstepsBackup(
 )
 ps_backup.backup_trip()
 ```
-> [!WARNING]\
+> [!CAUTION]
 > This project is **not affiliated with, endorsed by, or officially supported by Polarsteps**.
 > 
 > #### Terms of Use
