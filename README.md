@@ -33,9 +33,21 @@ For example:
 ```bash
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 ```
-
 > [!WARNING]\
 > Your remember_token is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
+
+## Trip ID
+Log in to Polarsteps from your web browser, then open the trip you want to back up.
+
+The trip ID can be found in the trip URL:
+```text
+https://www.polarsteps.com/<username>/<trip-id>-<trip-name>
+```
+For example, in:
+```text
+https://www.polarsteps.com/johndoe/1234567-my-trip
+```
+the trip ID is `1234567`.
 
 ## Quick start
 ```pyhton
