@@ -32,10 +32,10 @@ This tool requires an authenticated Polarsteps session token. You must use your 
 To retrieve your authentication token:
 1. Log in to Polarsteps from your web browser.
 2. Open your browser developer tools.
-    * Usually with F12
-    * Or right click -> Inspect
-3. Open the Application or Storage tab, depending on your browser.
-4. Go to the Cookies section.
+    * Usually with `F12`
+    * Or right click -> `Inspect`
+3. Open the `Application` or `Storage tab`, depending on your browser.
+4. Go to the `Cookies` section.
 5. Find the cookie named `remember_token`.
 6. Copy its value and provide it to the tool.
 
@@ -44,7 +44,7 @@ For example:
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 ```
 > [!CAUTION]
-> Your remember_token is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
+> Your `remember_token` is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
 
 ## Trip ID
 Log in to Polarsteps from your web browser, then open the trip you want to back up.
