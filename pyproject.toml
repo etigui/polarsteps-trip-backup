@@ -1,7 +1,7 @@
 [project]
 name = "polarsteps-trip-backup"
-version = "0.1.1"
-description = "Polarsteps backup command-line application"
+version = "1.0.0"
+description = "An unofficial Python tool to back up Polarsteps trips, including steps, locations, descriptions, and optional media downloads"
 readme = "README.md"
 authors = [{name = "Etienne Guignard"}]
 requires-python = ">=3.10"
