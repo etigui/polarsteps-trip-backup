@@ -14,22 +14,24 @@ logger = logging.getLogger(__name__)
 
 class PolarstepsBackup:
     """Backup a Polarsteps trip, including metadata and optional images."""
-    TRIP_JSON_FILENAME = "trip.json"
-    IMAGE_EXTENSION = ".jpg"
-    TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
-    S3_MEDIA_DOMAIN = "polarsteps.s3.amazonaws.com"
-    POLARSTEP_MEDIA_DOMAIN = "media.prod.polarsteps.com"
-    USER_AGENT = "PolarstepsBackup/1.0"
+    TRIP_JSON_FILENAME: str = "trip.json"
+    IMAGE_EXTENSION: str = ".jpg"
+    TIMESTAMP_FORMAT: str = "%Y%m%d%H%M%S"
+    S3_MEDIA_DOMAIN: str = "polarsteps.s3.amazonaws.com"
+    POLARSTEP_MEDIA_DOMAIN: str = "media.prod.polarsteps.com"
+    USER_AGENT: str = "PolarstepsBackup/1.0"
 
     def __init__(
         self,
         trip_id: str,
-        backup_images: bool = False,
+        remember_token: str | None = None,
+        backup_images: bool = True,
         backup_root: str | Path = "backups",
         media_download_delay: bool = True,
     ) -> None:
         """Initialize a Polarsteps backup instance."""
         self.trip_id = trip_id
+        self.remember_token = remember_token
         self.backup_images = backup_images
         self.backup_root = Path(backup_root)
         self.media_download_delay = media_download_delay
@@ -43,7 +45,7 @@ class PolarstepsBackup:
 
     def backup_trip(self) -> None:
         """Fetch the trip data and save the backup locally."""
-        client = PolarstepsClient()
+        client = PolarstepsClient(remember_token = self.remember_token)
         trip_response: TripResponse = client.get_trip(self.trip_id)
 
         trip: Trip | None = trip_response.trip

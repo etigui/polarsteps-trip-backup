@@ -4,7 +4,7 @@ An unofficial Python tool to back up Polarsteps trips, including steps, location
 ## Install and Run
 ### Locally
 ```bash
-export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
+export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
 uv sync --dev && uv pip install -e .
 uv run main.py --trip-id <your-trip-id-here>
 ```
@@ -39,10 +39,6 @@ To retrieve your authentication token:
 5. Find the cookie named `remember_token`.
 6. Copy its value and provide it to the tool.
 
-For example:
-```bash
-export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
-```
 > [!CAUTION]
 > Your `remember_token` is a sensitive authentication credential. Do not share it, commit it to Git, or expose it publicly.
 
@@ -53,11 +49,11 @@ The trip ID can be found in the trip URL:
 ```text
 https://www.polarsteps.com/<username>/<trip-id>-<trip-name>
 ```
-For example, in:
+
+For example, in the following URL, the trip ID is `1234567`:
 ```text
-https://www.polarsteps.com/johndoe/1234567-my-trip
+https://www.polarsteps.com/raccoon/1234567-my-trip
 ```
-the trip ID is `1234567`.
 
 ## Backup Structure
 When a backup is created, the output is organized by trip name and backup date. This makes it possible to keep multiple backups of the same trip without overwriting previous ones.
@@ -68,10 +64,10 @@ backups/
         ├── trip.json
         ├── <step-id>/
         │   ├── <media-id>.jpg
-        │   └── <media-id>.jpeg
+        │   └── <media-id>.jpg
         └── <step-id>/
-            ├── <media-id>.jpeg
-            └── <media-id>.jpeg
+            ├── <media-id>.jpg
+            └── <media-id>.jpg
 ```
 
 The `trip.json` file contains the full trip data returned by Polarsteps, including the trip metadata, steps, locations, descriptions, and media references.
@@ -81,14 +77,14 @@ Each step is stored in a directory named after its Polarsteps step ID. If media 
 Image files are named using their Polarsteps media ID:
 
 ```text
-<media-id>.jpeg
+<media-id>.jpg
 ```
 This structure intentionally uses Polarsteps IDs instead of human-readable names. The goal is to keep the backup easy to process programmatically. By reading `trip.json`, it is possible to match each step directory with the corresponding step data, and each media file with the corresponding media entry.
 
 In other words:
 * `trip.json` is the source of truth for the trip structure.
 * `<step-id>/` directories contain the media files for each step.
-* `<media-id>.jpeg` files can be matched back to the media entries in `trip.json`.
+* `<media-id>.jpg` files can be matched back to the media entries in `trip.json`.
 
 This makes the backup more reliable and easier to restore, parse, or reuse in future tools.
 
@@ -98,6 +94,12 @@ from polarsteps_backup.backup import PolarstepsBackup
 
 ps_backup = PolarstepsBackup(
     trip_id = "<your-trip-id-here>",
+
+    # Alternatively, set POLARSTEPS_REMEMBER_TOKEN in your environment or .env file.
+    # For example:
+    # - export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>"
+    # - printf 'POLARSTEPS_REMEMBER_TOKEN=%s\n' '<your-remember-token-here>' >> .env
+    remember_token = "<your-remember-token-here>", 
 )
 ps_backup.backup_trip()
 ```
@@ -114,7 +116,7 @@ ps_backup.backup_trip()
 > #### Risks and Limitations
 > * Polarsteps may change, restrict, or remove their internal API endpoints at any time, which may break this tool without notice.
 > * Because the API is undocumented, some data may be incomplete, unavailable, or returned in a different format.
-> * Using unofficial API endpoints may violate Polarsteps' Terms of Service.
+> * Using unofficial Polarsteps API endpoints may violate Polarsteps' Terms of Service.
 > * Excessive or automated usage may lead to rate limiting, blocking, account restrictions, or account suspension.
 > * Authentication cookies are sensitive credentials and should never be shared, committed, or exposed publicly.
 > 
@@ -127,7 +129,7 @@ ps_backup.backup_trip()
 > **By using this software, you acknowledge these limitations and agree to use it responsibly.**
 
 ## Credits
-This project relies on [remuzel/polarsteps-api](https://github.com/remuzel/polarsteps-api/), an unofficial Python wrapper around the Polarsteps APIs.
+This project relies on [remuzel/polarsteps-api](https://github.com/remuzel/polarsteps-api/), an unofficial Python wrapper around the Polarsteps API.
 
 The API client and the approach used to retrieve Polarsteps trip data are based on this project. This repository extends that idea by providing a backup-oriented tool to export trip data and optionally download related images.
 
