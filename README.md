@@ -1,7 +1,7 @@
 # Polarsteps Trip Backup
-Polarsteps backup command-line application
+An unofficial Python tool to back up Polarsteps trips, including steps, locations, descriptions, and optional media downloads.
 
-## Install and run
+## Install and Run
 ### Locally
 ```bash
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
@@ -49,7 +49,7 @@ https://www.polarsteps.com/johndoe/1234567-my-trip
 ```
 the trip ID is `1234567`.
 
-## Quick start
+## Quick Start
 ```pyhton
 from polarsteps_backup.backup import PolarstepsBackup
 
