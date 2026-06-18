@@ -6,8 +6,9 @@ Polarsteps backup command-line application
 ```bash
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
 uv sync --dev && uv pip install -e .
-uv run main.py
+uv run main.py --trip-id <your-trip-id-here>
 ```
+> Step media images are not downloaded by default. Use `--backup-images` to include them in the backup.
 
 ### In Docker
 ```bash
