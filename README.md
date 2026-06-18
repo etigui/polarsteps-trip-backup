@@ -8,13 +8,23 @@ export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
 uv sync --dev && uv pip install -e .
 uv run main.py --trip-id <your-trip-id-here>
 ```
-> Step media images are not downloaded by default. Use `--backup-images` to include them in the backup.
-
 ### In Docker
 ```bash
 docker build -t polarsteps-trip-backup .
 docker run --rm -e POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>" -v "${PWD}\backups:/app/backups" polarsteps-trip-backup --trip-id <your-trip-id-here> --backup-images
 ```
+
+> [!NOTE]
+> #### Media Backup
+> Step media images are not downloaded by default. Use `--backup-images` to include them in the backup.
+> #### Media Download Delay
+> When media images backup is enabled, the tool adds a random delay between image downloads.
+>
+> By default, this delay is between `1.5` and `5.0` seconds. This helps avoid sending too many requests to Polarsteps API in a short amount of time.
+>
+> Use `--no-media-download-delay` to disable this behavior
+>
+> Disabling the delay may make the backup faster, but it can also increase the number of requests sent in a short period of time.
 
 ## Remember Token
 This tool requires an authenticated Polarsteps session token. You must use your own Polarsteps account and only access trips or data that you are allowed to view.
