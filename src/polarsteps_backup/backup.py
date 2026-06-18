@@ -102,18 +102,17 @@ class PolarstepsBackup:
 
             output_path = step_dir / f"{media_id}{self.IMAGE_EXTENSION}"
 
+            self._download_sleep()
             success = self._download_image(media, output_path)
 
             if not success:
                 logger.info("Cannot download image: %s", media_id)
                 continue
 
-            self._download_sleep()
-
     def _download_sleep(self) -> None:
         """Wait for a random delay between downloads."""
         delay = random.uniform(1.5, 5.0)
-        logger.info("Pause %.2f secondes", delay)
+        logger.info("Downloading image in %.2f seconds to avoid stressing the API", delay)
         time.sleep(delay)
 
     def _download_image(self, media: Mapping[str, Any], output_path: Path) -> bool:
@@ -123,7 +122,6 @@ class PolarstepsBackup:
         if image_url is None:
             return False
 
-        logger.info("Download image: %s", image_url)
         try:
             response = self.session.get(
                 url=image_url,
