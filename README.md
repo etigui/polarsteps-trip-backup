@@ -89,7 +89,7 @@ In other words:
 This makes the backup more reliable and easier to restore, parse, or reuse in future tools.
 
 ## Quick Start
-```pyhton
+```python
 from polarsteps_backup.backup import PolarstepsBackup
 
 ps_backup = PolarstepsBackup(
