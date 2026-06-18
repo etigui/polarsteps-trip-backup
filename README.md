@@ -11,7 +11,7 @@ uv run main.py --trip-id <your-trip-id-here>
 ### In Docker
 ```bash
 docker build -t polarsteps-trip-backup .
-docker run --rm -e POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>" -v "${PWD}\backups:/app/backups" polarsteps-trip-backup --trip-id <your-trip-id-here> --backup-images
+docker run --rm -e POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>" -v "${PWD}\backups:/app/backups" polarsteps-trip-backup --trip-id <your-trip-id-here>
 ```
 
 > [!NOTE]
@@ -97,9 +97,7 @@ This makes the backup more reliable and easier to restore, parse, or reuse in fu
 from polarsteps_backup.backup import PolarstepsBackup
 
 ps_backup = PolarstepsBackup(
-    trip_id =  "<your-trip-id-here>",
-    backup_root = "backup",
-    backup_images = True,
+    trip_id = "<your-trip-id-here>",
 )
 ps_backup.backup_trip()
 ```
