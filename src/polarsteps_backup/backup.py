@@ -104,7 +104,7 @@ class PolarstepsBackup:
                 continue
             
             if is_image_deleted:
-                logger.info("Skip media if the image has been deleted")
+                logger.info("Skip image if it has been deleted")
                 return
 
             output_path = step_dir / f"{media_id}{self.IMAGE_EXTENSION}"
@@ -124,7 +124,7 @@ class PolarstepsBackup:
     
         delay = random.uniform(1.5, 5.0)
         logger.info(
-            "Waiting %.2f seconds before downloading media image to avoid stressing the API",
+            "Waiting %.2f seconds before downloading image to avoid stressing the API",
             delay,
         )
         time.sleep(delay)
@@ -137,7 +137,7 @@ class PolarstepsBackup:
         if image_url is None:
             return False
 
-        logger.info("Downloading media image")
+        logger.info("Downloading image")
 
         try:
             response = self.session.get(
