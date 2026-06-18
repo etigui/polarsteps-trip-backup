@@ -36,9 +36,10 @@ def parse_args() -> argparse.Namespace:
         help="Root directory where the backup will be stored",
     )
     parser.add_argument(
-        "--backup-images",
-        action="store_true",
-        help="Download trip images ?",
+        "--no-backup-images",
+        action="store_false",
+        dest="backup_images",
+        help="Disable trip image downloads.",
     )
     parser.add_argument(
         "--no-media-download-delay",

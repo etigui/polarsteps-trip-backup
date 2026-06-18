@@ -16,7 +16,7 @@ docker run --rm -e POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>" -v "${
 
 > [!NOTE]
 > #### Media Backup
-> Step media images are not downloaded by default. Use `--backup-images` to include them in the backup.
+> Step media images are downloaded by default. Use `--no-backup-images` to exclude them from the backup.
 > #### Media Download Delay
 > When media images backup is enabled, the tool adds a random delay between image downloads.
 >
