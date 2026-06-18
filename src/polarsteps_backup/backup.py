@@ -45,7 +45,10 @@ class PolarstepsBackup:
 
     def backup_trip(self) -> None:
         """Fetch the trip data and save the backup locally."""
-        client = PolarstepsClient(remember_token = self.remember_token)
+        client = PolarstepsClient(
+            remember_token = self.remember_token,
+            cache_ttl = 1  # Keep cached values for only one second
+        )
         trip_response: TripResponse = client.get_trip(self.trip_id)
 
         trip: Trip | None = trip_response.trip
