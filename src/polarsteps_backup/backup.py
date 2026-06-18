@@ -95,10 +95,15 @@ class PolarstepsBackup:
 
         for media in step.get("media", []):
             media_id = media.get("id")
+            is_image_deleted = media.get("is_deleted")
 
             if media_id is None:
                 logger.info("Skip media without id")
                 continue
+            
+            if is_image_deleted:
+                logger.info("Skip media if the image has been deleted")
+                return
 
             output_path = step_dir / f"{media_id}{self.IMAGE_EXTENSION}"
 
