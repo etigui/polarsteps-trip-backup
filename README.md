@@ -62,12 +62,12 @@ the trip ID is `1234567`.
 ## Backup Structure
 When a backup is created, the output is organized by trip name and backup date. This makes it possible to keep multiple backups of the same trip without overwriting previous ones.
 ```text
-backup/
+backups/
 └── <trip-name>/
-    └── <backup-datetime>/
+    └── <datetime>/
         ├── trip.json
         ├── <step-id>/
-        │   ├── <media-id>.jpeg
+        │   ├── <media-id>.jpg
         │   └── <media-id>.jpeg
         └── <step-id>/
             ├── <media-id>.jpeg
