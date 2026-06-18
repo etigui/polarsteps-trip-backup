@@ -26,11 +26,13 @@ class PolarstepsBackup:
         trip_id: str,
         backup_images: bool = False,
         backup_root: str | Path = "backups",
+        media_download_delay: bool = True,
     ) -> None:
         """Initialize a Polarsteps backup instance."""
         self.trip_id = trip_id
         self.backup_images = backup_images
         self.backup_root = Path(backup_root)
+        self.media_download_delay = media_download_delay
         self.session = requests.Session()
         self.session.headers.update(
             {
@@ -107,18 +109,26 @@ class PolarstepsBackup:
 
             output_path = step_dir / f"{media_id}{self.IMAGE_EXTENSION}"
 
-            self._download_sleep()
+            self._apply_media_download_delay()
             success = self._download_image(media, output_path)
 
             if not success:
                 logger.info("Cannot download image: %s", media_id)
                 continue
 
-    def _download_sleep(self) -> None:
-        """Wait for a random delay between downloads."""
+    def _apply_media_download_delay(self) -> None:
+        """Add a random delay between media downloads to avoid stressing the API."""
+
+        if not self.media_download_delay:
+            return
+    
         delay = random.uniform(1.5, 5.0)
-        logger.info("Downloading image in %.2f seconds to avoid stressing the API", delay)
+        logger.info(
+            "Waiting %.2f seconds before downloading media image to avoid stressing the API",
+            delay,
+        )
         time.sleep(delay)
+
 
     def _download_image(self, media: Mapping[str, Any], output_path: Path) -> bool:
         """Download an image from a Polarsteps media object and save it to disk."""
@@ -126,6 +136,8 @@ class PolarstepsBackup:
 
         if image_url is None:
             return False
+
+        logger.info("Downloading media image")
 
         try:
             response = self.session.get(

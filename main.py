@@ -40,6 +40,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Download trip images ?",
     )
+    parser.add_argument(
+        "--no-media-download-delay",
+        action="store_false",
+        dest="media_download_delay",
+        help="Disable the random delay (1.5 - 5 sec) between media image downloads.",
+    )
     return parser.parse_args()
 
 def main() -> None:
@@ -52,7 +58,8 @@ def main() -> None:
     ps_backup = PolarstepsBackup(
         trip_id =  args.trip_id,
         backup_root = args.backup_root,
-        backup_images = args.backup_images, 
+        backup_images = args.backup_images,
+        media_download_delay=args.media_download_delay,
     )
     try:
         ps_backup.backup_trip()
