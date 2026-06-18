@@ -49,6 +49,39 @@ https://www.polarsteps.com/johndoe/1234567-my-trip
 ```
 the trip ID is `1234567`.
 
+## Backup Structure
+When a backup is created, the output is organized by trip name and backup date. This makes it possible to keep multiple backups of the same trip without overwriting previous ones.
+```text
+backup/
+└── <trip-name>/
+    └── <backup-datetime>/
+        ├── trip.json
+        ├── <step-id>/
+        │   ├── <media-id>.jpeg
+        │   └── <media-id>.jpeg
+        └── <step-id>/
+            ├── <media-id>.jpeg
+            └── <media-id>.jpeg
+```
+
+The `trip.json` file contains the full trip data returned by Polarsteps, including the trip metadata, steps, locations, descriptions, and media references.
+
+Each step is stored in a directory named after its Polarsteps step ID. If media backup is enabled, the images attached to that step are downloaded inside this directory.
+
+Image files are named using their Polarsteps media ID:
+
+```text
+<media-id>.jpeg
+```
+This structure intentionally uses Polarsteps IDs instead of human-readable names. The goal is to keep the backup easy to process programmatically. By reading `trip.json`, it is possible to match each step directory with the corresponding step data, and each media file with the corresponding media entry.
+
+In other words:
+* `trip.json` is the source of truth for the trip structure.
+* `<step-id>/` directories contain the media files for each step.
+* `<media-id>.jpeg` files can be matched back to the media entries in `trip.json`.
+
+This makes the backup more reliable and easier to restore, parse, or reuse in future tools.
+
 ## Quick Start
 ```pyhton
 from polarsteps_backup.backup import PolarstepsBackup
