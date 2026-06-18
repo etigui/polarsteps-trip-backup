@@ -151,6 +151,12 @@ class PolarstepsBackup:
         if not image_path:
             return None
 
+        # The API returns an S3 media URL, but direct access to this URL fails.
+        # Replacing it with the Polarsteps media domain makes the image publicly
+        # downloadable, even without using the remember_token.
+        # Note:
+        # If authentication becomes required in the future, the remember_token
+        # should be attached to the session header.
         return str(image_path).replace(
             self.S3_MEDIA_DOMAIN,
             self.POLARSTEP_MEDIA_DOMAIN,
