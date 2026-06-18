@@ -1,7 +1,7 @@
 # Polarsteps Trip Backup
 Polarsteps backup command-line application
 
-## Run
+## Install and run
 ### Locally
 ```bash
 export POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>
