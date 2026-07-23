@@ -89,7 +89,7 @@ class PolarstepsBackup:
     def _backup_step_images(self, step: Mapping[str, Any], backup_dir: Path) -> None:
         """Download and save all images for a single trip step."""
         step_id = step.get("id")
-        step_name = step.get("name", "unknown-step")
+        step_name = step.get("display_name", "drafting")
 
         if step_id is None:
             logger.info("Skip step without id")
