@@ -13,9 +13,16 @@ def init_logger() -> None:
     """Configure the application logging format and level."""
     logging.basicConfig(
         level=logging.INFO,
-        #format="[%(asctime)s - %(name)s - %(levelname)s] %(message)s",
         format="[%(levelname)s %(asctime)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[
+            logging.StreamHandler(),
+            logging.FileHandler(
+                "app.log",
+                mode="a",
+                encoding="utf-8",
+            ),
+        ],
     )
 
 def parse_args() -> argparse.Namespace:
