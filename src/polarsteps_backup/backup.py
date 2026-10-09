@@ -52,7 +52,9 @@ class PolarstepsBackup:
         trip_response: TripResponse = client.get_trip(self.trip_id)
 
         trip: Trip | None = trip_response.trip
-        if trip_response.is_error or trip is None:
+        if trip_response.is_error:
+            raise RuntimeError(f"Polarsteps API request failed. Check the URL and request headers, especially 'Polarsteps-Api-Version', which may no longer be valid.")
+        if trip is None:
             raise RuntimeError(f"Cannot fetch trip: {self.trip_id}")
 
         backup_dir = self._create_backup_dir(trip)
