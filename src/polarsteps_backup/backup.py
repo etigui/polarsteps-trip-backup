@@ -67,7 +67,7 @@ class PolarstepsBackup:
         if not self.backup_images:
             return
 
-        steps = trip_response.data.get("all_steps", [])
+        steps = trip_response.data.get("steps", [])
         for step in steps:
             self._backup_step_images(step, backup_dir)
 
