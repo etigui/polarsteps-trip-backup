@@ -26,6 +26,7 @@ class HTTPClient:
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Cookie": f"remember_token={remember_token}",
+            "Polarsteps-Api-Version": "69",
         }
 
         self.session.headers.update(headers)
