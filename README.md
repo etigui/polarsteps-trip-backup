@@ -16,9 +16,9 @@ docker run --rm -e POLARSTEPS_REMEMBER_TOKEN="<your-remember-token-here>" -v "${
 
 > [!NOTE]
 > #### Media Backup
-> Step media images are downloaded by default. Use `--no-backup-images` to exclude them from the backup.
+> Step media are downloaded by default. Use `--no-backup-media` to exclude them from the backup.
 > #### Media Download Delay
-> When media images backup is enabled, the tool adds a random delay between image downloads.
+> When media backup is enabled, the tool adds a random delay between media downloads.
 >
 > By default, this delay is between `1.5` and `5.0` seconds. This helps avoid sending too many requests to Polarsteps API in a short amount of time.
 >
@@ -64,17 +64,17 @@ backups/
         ├── trip.json
         ├── <step-id>/
         │   ├── <media-id>.jpg
-        │   └── <media-id>.jpg
+        │   └── <media-id>.mp4
         └── <step-id>/
             ├── <media-id>.jpg
-            └── <media-id>.jpg
+            └── <media-id>.mp4
 ```
 
 The `trip.json` file contains the full trip data returned by Polarsteps, including the trip metadata, steps, locations, descriptions, and media references.
 
-Each step is stored in a directory named after its Polarsteps step ID. If media backup is enabled, the images attached to that step are downloaded inside this directory.
+Each step is stored in a directory named after its Polarsteps step ID. If media backup is enabled, the media attached to that step are downloaded inside this directory.
 
-Image files are named using their Polarsteps media ID:
+Media files are named using their Polarsteps media ID:
 
 ```text
 <media-id>.jpg
@@ -131,4 +131,4 @@ ps_backup.backup_trip()
 ## Credits
 Special thanks to [remuzel/polarsteps-api](https://github.com/remuzel/polarsteps-api/), an unofficial Python wrapper around the Polarsteps API, which inspired this project.
 
-The API client and the approach used to retrieve Polarsteps trip data are based on this project. This repository extends that idea by providing a backup-oriented tool to export trip data and optionally download related images.
+The API client and the approach used to retrieve Polarsteps trip data are based on this project. This repository extends that idea by providing a backup-oriented tool to export trip data and optionally download related media.
