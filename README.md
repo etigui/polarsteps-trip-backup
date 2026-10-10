@@ -75,16 +75,16 @@ The `trip.json` file contains the full trip data returned by Polarsteps, includi
 Each step is stored in a directory named after its Polarsteps step ID. If media backup is enabled, the media attached to that step are downloaded inside this directory.
 
 Media files are named using their Polarsteps media ID:
-
 ```text
 <media-id>.jpg
+<media-id>.mp4
 ```
 This structure intentionally uses Polarsteps IDs instead of human-readable names. The goal is to keep the backup easy to process programmatically. By reading `trip.json`, it is possible to match each step directory with the corresponding step data, and each media file with the corresponding media entry.
 
 In other words:
 * `trip.json` is the source of truth for the trip structure.
 * `<step-id>/` directories contain the media files for each step.
-* `<media-id>.jpg` files can be matched back to the media entries in `trip.json`.
+* `<media-id>.jpg` and `<media-id>.mp4` files can be matched back to the media entries in `trip.json`.
 
 This makes the backup more reliable and easier to restore, parse, or reuse in future tools.
 
