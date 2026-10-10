@@ -32,14 +32,14 @@ class PolarstepsBackup:
         self,
         trip_id: str,
         remember_token: str | None = None,
-        backup_images: bool = True,
+        backup_media: bool = True,
         backup_root: str | Path = "backups",
         media_download_delay: bool = True,
     ) -> None:
         """Initialize a Polarsteps backup instance."""
         self.trip_id = trip_id
         self.remember_token = remember_token
-        self.backup_images = backup_images
+        self.backup_media = backup_media
         self.backup_root = Path(backup_root)
         self.media_download_delay = media_download_delay
         self.session = requests.Session()
@@ -71,7 +71,7 @@ class PolarstepsBackup:
 
         self._save_trip_json(trip, backup_dir)
 
-        if not self.backup_images:
+        if not self.backup_media:
             return
 
         steps = trip_response.data.get("steps", [])

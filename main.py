@@ -55,10 +55,10 @@ def parse_args() -> argparse.Namespace:
         help="Root directory where the backup will be stored",
     )
     parser.add_argument(
-        "--no-backup-images",
+        "--no-backup-media",
         action="store_false",
-        dest="backup_images",
-        help="Disable trip image downloads.",
+        dest="backup_media",
+        help="Disable trip media downloads.",
     )
     parser.add_argument(
         "--no-media-download-delay",
@@ -86,7 +86,7 @@ def main() -> None:
         trip_id =  args.trip_id,
         backup_root = args.backup_root,
         remember_token = args.remember_token,
-        backup_images = args.backup_images,
+        backup_media = args.backup_media,
         media_download_delay=args.media_download_delay,
     )
     try:
