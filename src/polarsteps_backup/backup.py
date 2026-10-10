@@ -3,6 +3,7 @@ import random
 import logging
 import requests
 from pathlib import Path
+from enum import IntEnum
 from datetime import datetime
 from typing import Any, Mapping
 
@@ -12,14 +13,20 @@ from polarsteps_api.models.trip import Trip
 
 logger = logging.getLogger(__name__)
 
+class MediaType(IntEnum):
+    """Polarsteps Media type"""
+    IMAGE = 0
+    VIDEO = 1
+
 class PolarstepsBackup:
     """Backup a Polarsteps trip, including metadata and optional images."""
     TRIP_JSON_FILENAME: str = "trip.json"
     IMAGE_EXTENSION: str = ".jpg"
+    VIDEO_EXTENSION: str = ".mp4"
     TIMESTAMP_FORMAT: str = "%Y%m%d%H%M%S"
     S3_MEDIA_DOMAIN: str = "polarsteps.s3.amazonaws.com"
     POLARSTEP_MEDIA_DOMAIN: str = "media.prod.polarsteps.com"
-    USER_AGENT: str = "PolarstepsBackup/1.0"
+    USER_AGENT: str = "PolarstepsClient/1.0"
 
     def __init__(
         self,
@@ -69,7 +76,7 @@ class PolarstepsBackup:
 
         steps = trip_response.data.get("steps", [])
         for step in steps:
-            self._backup_step_images(step, backup_dir)
+            self._backup_step_media(step, backup_dir)
 
     def _create_backup_dir(self, trip: Trip) -> Path:
         """Create and return the backup directory for the given trip."""
@@ -88,7 +95,7 @@ class PolarstepsBackup:
         """Return the current date and time as a compact timestamp string."""
         return datetime.now().strftime(self.TIMESTAMP_FORMAT)
 
-    def _backup_step_images(self, step: Mapping[str, Any], backup_dir: Path) -> None:
+    def _backup_step_media(self, step: Mapping[str, Any], backup_dir: Path) -> None:
         """Download and save all images for a single trip step."""
         step_id = step.get("id")
         step_name = step.get("display_name", "drafting")
@@ -97,27 +104,41 @@ class PolarstepsBackup:
             logger.info("Skip step without id")
             return
 
-        logger.info("Backup step name: %s", step_name)
+        logger.info("Backing up media for step: %s", step_name)
 
         step_dir = backup_dir / str(step_id)
         step_dir.mkdir(parents=True, exist_ok=True)
 
         for media in step.get("media", []):
             media_id = media.get("id")
-            is_image_deleted = media.get("is_deleted")
-
             if media_id is None:
                 logger.info("Skip media without id")
                 continue
             
-            if is_image_deleted:
+            if media.get("is_deleted"):
                 logger.info("Skip image if it has been deleted")
-                return
+                continue
 
-            output_path = step_dir / f"{media_id}{self.IMAGE_EXTENSION}"
+            # Validate media type
+            media_type = self._get_media_type(media)
+            if media_type is None:
+                logger.info("Skip unsupported media type: %s", media.get("type"))
+                continue
+
+            media_extension = self._get_media_extension(media_type)
+            if media_extension is None:
+                logger.info("Skip unsupported media extension")
+                continue
+
+            media_url = self._get_media_url(media, media_type)
+            if media_url is None:
+                logger.info("Skip unsupported media URL")
+                continue
+
+            output_path = step_dir / f"{media_id}{media_extension}"
 
             self._apply_media_download_delay()
-            success = self._download_image(media, output_path)
+            success = self._download_media(media_id, media_url, output_path)
 
             if not success:
                 logger.info("Cannot download image: %s", media_id)
@@ -136,44 +157,49 @@ class PolarstepsBackup:
         )
         time.sleep(delay)
 
+    def _download_media(self, media_id: int, media_url: str, output_path: Path) -> bool:
+        """Download an image or video from a Polarsteps media object and save it to disk."""
+        logger.info("Downloading media: %s", media_id)
 
-    def _download_image(self, media: Mapping[str, Any], output_path: Path) -> bool:
-        """Download an image from a Polarsteps media object and save it to disk."""
-        image_url = self._get_image_url(media)
-
-        if image_url is None:
-            return False
-
-        logger.info("Downloading image")
+        temp_path = output_path.with_suffix(output_path.suffix + ".part")
 
         try:
-            response = self.session.get(
-                url=image_url,
+            with self.session.get(
+                url=media_url,
                 stream=True,
-                timeout=30,
-            )
+                timeout=(10, 120),
+            ) as response:
 
-            if response.status_code == 429:
-                logger.info("Too many requests. Slow down")
-                return False
+                if response.status_code == 429:
+                    logger.info("Too many requests. Slow down")
+                    return False
 
-            response.raise_for_status()
+                response.raise_for_status()
 
-            with output_path.open("wb") as f:
-                for chunk in response.iter_content(chunk_size=64 * 1024):
-                    if chunk:
-                        f.write(chunk)
+                with temp_path.open("wb") as f:
+                    for chunk in response.iter_content(chunk_size=64 * 1024):
+                        if chunk:
+                            f.write(chunk)
+
+            temp_path.replace(output_path)
             return True
-        except requests.RequestException as error:
+
+        except (requests.RequestException, OSError) as error:
             logger.info("Download error: %s", error)
             return False
 
-    def _get_image_url(self, media: Mapping[str, Any]) -> str | None:
-        """Extract and normalize the image URL from a Polarsteps media object."""
-        image_path = media.get("large_thumbnail_path")
+        finally:
+            temp_path.unlink(missing_ok=True)
 
-        if not image_path:
+    def _get_media_type(self, media: Mapping[str, Any]) -> MediaType | None:
+        """Get the media type if supported."""
+        try:
+            return MediaType(media.get("type"))
+        except (ValueError, TypeError):
             return None
+
+    def _get_media_url(self, media: Mapping[str, Any], media_type: MediaType) -> str | None:
+        """Get the download URL based on the media type."""
 
         # The API returns an S3 media URL, but direct access to this URL fails.
         # Replacing it with the Polarsteps media domain makes the image publicly
@@ -181,7 +207,19 @@ class PolarstepsBackup:
         # Note:
         # If authentication becomes required in the future, the remember_token
         # should be attached to the session header.
-        return str(image_path).replace(
-            self.S3_MEDIA_DOMAIN,
-            self.POLARSTEP_MEDIA_DOMAIN,
-        )
+        media_urls = {
+            MediaType.IMAGE: str(media.get("large_thumbnail_path")).replace(
+                self.S3_MEDIA_DOMAIN,
+                self.POLARSTEP_MEDIA_DOMAIN,
+            ),
+            MediaType.VIDEO: media.get("path"),
+        }
+        return media_urls.get(media_type, None)
+
+    def _get_media_extension(self, media_type: MediaType) -> str | None:
+        """Get the media file extension based on the media type."""
+        extensions = {
+            MediaType.IMAGE: self.IMAGE_EXTENSION,
+            MediaType.VIDEO: self.VIDEO_EXTENSION,
+        }
+        return extensions.get(media_type, None)
